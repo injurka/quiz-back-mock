@@ -1,18 +1,22 @@
 /* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
 
-import * as Hapi from '@hapi/hapi';
 import * as Tests from 'server/api/tests';
 
+import express from 'express';
 import config from 'server/config';
-import InertPlugin from 'server/plugins/inert';
-import VisionPlugin from 'server/plugins/vision';
+import { print } from 'server/utils/print-route';
+
+interface IOptions {
+  port: number;
+}
 
 class Server {
-  private server: Hapi.Server;
+  private server = express();
+  private options;
 
-  constructor(options: Hapi.ServerOptions) {
-    this.server = new Hapi.Server({ ...options, routes: { cors: true } });
+  constructor(options: IOptions) {
+    this.options = options;
 
     this.initializeControllers();
     this.setUpNodeExceptions();
@@ -20,11 +24,13 @@ class Server {
 
   public async listen() {
     try {
-      this.server.start();
+      const { port } = this.options;
+
+      await this.server.listen(port);
+
       console.log('---------------------------------------');
       console.log(`✨ App listening on the port ${config.port}`);
-      console.log(`🚀 ${this.server.info.uri}`);
-      this.server.table().forEach((route) => console.log(`${route.method}\t${route.path}`));
+      this.server._router.stack.forEach(print.bind(null, []));
       console.log('---------------------------------------');
     } catch (error) {
       console.log(JSON.stringify(error));
@@ -32,23 +38,8 @@ class Server {
   }
 
   private initializeControllers() {
+    this.server.get('/health', (_, res) => res.status(200).send('200'));
     Tests.init(this.server, '/api');
-  }
-
-  public getServer(): Hapi.Server {
-    return this.server;
-  }
-
-  public async setUpPlugins(): Promise<void> {
-    try {
-      if (process.env.NODE_ENV === 'staging') {
-        await InertPlugin(this.server);
-        await VisionPlugin(this.server);
-      }
-    } catch (err) {
-      console.error(err);
-      throw new Error('Unable to register plugins');
-    }
   }
 
   private setUpNodeExceptions(): void {

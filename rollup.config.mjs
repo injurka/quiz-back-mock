@@ -63,14 +63,13 @@ const config = defineConfig([
         dotenv: 'dotenv',
         path: 'path',
         '@hapi/hapi': 'Hapi',
-        joi: 'Joi',
         '@hapi/boom': 'Boom',
         '@faker-js/faker': 'faker',
         nock: 'nock',
         envalid: 'envalid'
       }
     },
-    external: ['dotenv', 'path', 'Hapi', 'Joi', 'Boom', 'faker', 'nock', 'envalid'],
+    external: ['dotenv', 'path', 'Hapi', 'Boom', 'faker', 'nock', 'envalid'],
     plugins: [
       json(),
       commonjs(),

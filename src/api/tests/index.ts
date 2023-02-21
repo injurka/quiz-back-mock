@@ -1,7 +1,6 @@
-import * as Hapi from '@hapi/hapi';
-
+import { Express } from 'express';
 import { testsRoutes } from './tests.routes';
 
-export function init(server: Hapi.Server, routePrefix: string) {
+export function init(server: Express, routePrefix: string) {
   testsRoutes(server, routePrefix);
 }

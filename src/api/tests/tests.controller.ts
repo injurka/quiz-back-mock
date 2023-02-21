@@ -1,5 +1,4 @@
-import Boom from '@hapi/boom';
-import * as Hapi from '@hapi/hapi';
+import { Request, Response } from 'express';
 import { ITestListProps, ITestResultPayload } from './tests.interfaces';
 
 import { TestsService } from './tests.service';
@@ -7,64 +6,63 @@ import { TestsService } from './tests.service';
 export class TestsController {
   private service = new TestsService();
 
-  public async submitTestResult(req: Hapi.Request, res: Hapi.ResponseToolkit) {
+  submitTestResult = async (req: Request, res: Response) => {
+    const payload = req.body as ITestResultPayload;
+
     try {
-      await this.service.submitTestResult(req.payload as ITestResultPayload);
-      return res.response();
+      await this.service.submitTestResult(payload);
+      return res.status(200).send();
     } catch (_) {
-      return Boom.notFound();
+      return res.status(404).send();
     }
-  }
+  };
 
-  public async getBySysname(req: Hapi.Request, res: Hapi.ResponseToolkit) {
+  getBySysname = async (req: Request, res: Response) => {
     try {
-      const item = await this.service.getBySysname(`${req.params.sysname}`);
-
-      if (!item) throw new Error('Test not found');
-
-      return res.response(item);
-    } catch (_) {
-      return Boom.notFound();
+      const result = await this.service.getBySysname(`${req.params.sysname}`);
+      if (!result) throw new Error('Test not found');
+      return res.status(200).send(result);
+    } catch (error) {
+      return res.status(404).send({ error });
     }
-  }
+  };
 
-  public async getResults(req: Hapi.Request, res: Hapi.ResponseToolkit) {
+  getResults = async (req: Request, res: Response) => {
     try {
-      const item = await this.service.getResultsByObjectId(`${req.params.objectId}`);
-
-      if (!item) throw new Error('Test result not found');
-
-      return res.response(item);
-    } catch (_) {
-      return Boom.notFound();
+      const result = await this.service.getResultsByObjectId(`${req.params.objectId}`);
+      if (!result) throw new Error('Test result not found');
+      return res.status(200).send(result);
+    } catch (error) {
+      return res.status(404).send({ error });
     }
-  }
+  };
 
-  public async getListBySysnames(req: Hapi.Request, res: Hapi.ResponseToolkit) {
+  getListBySysnames = async (req: Request, res: Response) => {
     try {
-      const payload = req.payload as ITestListProps;
+      const payload = req.body as ITestListProps;
+
       const result = await this.service.getListBySysnames(payload.sysnames);
-      return res.response(result);
+      return res.status(200).send(result);
     } catch (_) {
-      return Boom.badRequest();
+      return res.status(404).send();
     }
-  }
+  };
 
-  public async getCategories(req: Hapi.Request, res: Hapi.ResponseToolkit) {
+  getCategories = async (req: Request, res: Response) => {
     try {
       const result = await this.service.getCategories();
-      return res.response(result);
+      return res.status(200).send(result);
     } catch (_) {
-      return Boom.badRequest();
+      return res.status(404).send();
     }
-  }
+  };
 
-  public async getPassed(req: Hapi.Request, res: Hapi.ResponseToolkit) {
+  getPassed = async (req: Request, res: Response) => {
     try {
       const result = await this.service.getPassed();
-      return res.response(result);
+      return res.status(200).send(result);
     } catch (_) {
-      return Boom.badRequest();
+      return res.status(404).send();
     }
-  }
+  };
 }

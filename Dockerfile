@@ -1,7 +1,7 @@
 # ---- Node modules ---- #
 FROM node:18.12.1-alpine AS node_modules
 
-COPY package*.json yarn.lock ./
+COPY package*.json ./
 RUN yarn install
 
 

@@ -50,11 +50,12 @@ export class TestsService {
   public async getListBySysnames(sysnames: string[]) {
     const data = await new Promise<ITest[]>((r) =>
       r(
-        !!sysnames.length
+        !!sysnames?.length
           ? (this.repositoryTests.filter((f) => sysnames.includes(f.sysname)) as ITest[])
           : this.repositoryTests
       )
     );
+
     return data;
   }
 

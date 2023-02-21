@@ -3,19 +3,30 @@
 
 import * as Tests from 'server/api/tests';
 
+import os from 'os';
+import cors from 'cors';
 import express from 'express';
 import config from 'server/config';
 import { print } from 'server/utils/print-route';
+import { allowCrossDomain } from './utils/allow-cross-domain';
 
 interface IOptions {
   port: number;
 }
 
 class Server {
-  private server = express();
+  private server;
   private options;
 
   constructor(options: IOptions) {
+    const server = express();
+
+    server.use(cors());
+    server.use(allowCrossDomain);
+    server.use(express.json());
+    server.use(express.urlencoded({ extended: true }));
+
+    this.server = server;
     this.options = options;
 
     this.initializeControllers();
@@ -30,6 +41,7 @@ class Server {
 
       console.log('---------------------------------------');
       console.log(`✨ App listening on the port ${config.port}`);
+      console.log(`✨ ${os.hostname()}`);
       this.server._router.stack.forEach(print.bind(null, []));
       console.log('---------------------------------------');
     } catch (error) {

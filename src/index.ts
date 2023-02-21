@@ -12,7 +12,12 @@ dotenv.config({
 (async () => {
   validateEnv();
 
-  const app = new Server({ host: config.host, port: config.port, routes: { cors: true } });
+  const app = new Server({
+    address: config.host,
+    host: config.host,
+    port: config.port,
+    routes: { cors: true }
+  });
 
   await app.setUpPlugins();
   await app.listen();

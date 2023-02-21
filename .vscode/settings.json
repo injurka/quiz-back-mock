@@ -1,0 +1,37 @@
+{
+  "eslint.format.enable": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnPaste": true, // required 
+  "editor.formatOnType": true, // required
+  "editor.formatOnSave": true, // optional 
+  "editor.formatOnSaveMode": "file", // required to format on save
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.stylelint": true
+  },
+  "files.autoSave": "onFocusChange", // optional but recommended
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+  ],
+  "better-comments.tags": [
+    {
+      "tag": ":",
+      "color": "#609EA250",
+      "strikethrough": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": true
+    },  
+    {
+      "tag": "*",
+      "color": "#98C379",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "#98C37905",
+      "bold": true,
+      "italic": false
+    }
+  ],
+}
+
